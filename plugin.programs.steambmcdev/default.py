@@ -123,8 +123,8 @@ if __name__ == "__main__":
         progress.update(5, lang(330101))
         steamapi.steamCheck()
         # Add settings item
-        listitem = xbmcgui.ListItem("Settings")
-        xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=settings", listitem, isFolder=False)
+        # listitem = xbmcgui.ListItem("Settings")
+        # xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=settings", listitem, isFolder=False)
         if not ifc.checkSteamConnectivity():
             xbmcgui.Dialog().ok(lang(33031), lang(33032) % ifc.http_code)
         else:
