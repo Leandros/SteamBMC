@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="32001">
+        <setting label="32011" type="text" id="steam_publicurl" default="" />
+        <setting label="32012" type="text" id="steam_bin" default="" />
+    </category>
+    <category label="32002">
+        <setting label="32111" type="bool" id="game_notify" default="" />
+        <setting label="32112" type="enum" id="game_onlaunch" default="0" lvalues="321120|321121|321122" />
+    </category>
+    <category label="32003">
+        <setting label="32211" type="bool" id="artwork_usefanart" default="true" />
+        <setting label="32212" type="enum" id="artwork_logosize" default="0" lvalues="32113|32114" />
+        <setting label="32216" type="bool" id="artwork_addborder" default="true" />
+        <setting label="32215" type="action" id="artwork_refreshcache" default="" action="XBMC.RunPlugin(plugin://plugin.programs.steambmcdev/?do=refresh_cache)" />
+    </category>
+</settings>
+
+

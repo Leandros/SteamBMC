@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Help! I can't write addon.xml's to save my life. Modified from 4oD plugin; things may be broken! -->
+
+<addon id="plugin.programs.steambmcdev"
+       name="SteamBMC"
+       version="1.0.0"
+       provider-name="tom66">
+    <requires>
+		<!-- You need superrepo.org -->
+    	<import addon="script.module.pil" version="1.1.7"/>
+        <import addon="xbmc.python" version="2.1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource"
+               library="default.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <language>en</language>
+        <platform>all</platform>
+        <summary>SteamBMC</summary>
+        <description>Browse and launch all your Steam games from XBMC. Games are automatically added using your library contents. Fanart and images are added for games where available.</description>
+        <disclaimer>You will need Steam installed and an active web connection to launch games. Currently only supports Windows, however Linux and OS X support should be available soon.
+
+The "VALVe Logo", Valve and Steam are trademarks of Valve Corporation.</disclaimer>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 2</license>
+        <forum></forum>
+        <website></website>
+        <source></source>
+    </extension>
+</addon>

@@ -1,0 +1,47 @@
+<strings>
+  <!-- Settings -->
+  <string id="32001">Steam</string>
+  <string id="32011">Steam Public URL Name (ex. "username")</string>
+  <string id="32012">Steam Binary</string>
+  <string id="32002">Games</string>
+  <string id="32111">Notify if Steam Failed to Launch Game</string>
+  <string id="32112">On Game Launch</string>
+  <string id="321120">Do Nothing</string>
+  <string id="321121">Minimise XBMC</string>
+  <string id="321122">Quit XBMC</string>
+  <string id="32003">Artwork</string>
+  <string id="32211">Show Background Fanart</string>
+  <string id="32212">Logo Size</string>
+  <string id="32213">Wide (Banner)</string>     <!-- for Logo Size -->
+  <string id="32214">Tall (Icon)</string>       <!-- ... -->
+  <string id="32215">Refresh Fanart Cache</string>
+  <string id="32216">Add Transparent Border</string>
+  <!-- Progress dialog for fetching games list -->
+  <string id="33011">Building games list...</string>
+  <string id="33012">Connecting to SteamCommunity.com</string>
+  <string id="33013">Decoding games XML</string>
+  <string id="33014">Checking: %s</string>
+  <string id="33015">Checking connectivity to SteamCommunity.com</string>
+  <string id="33016">Finished</string>
+  <string id="33017">Refreshing artwork cache...</string>
+  <string id="33018">Starting game</string>
+  <string id="33019">Starting through Steam...</string>
+  <string id="330101">Initialising Steam...</string>
+  <!-- After game has been launched these messages give the user 5 seconds to click cancel and abort the minimise/close. 
+       (in case the game didn't launch or they want XBMC still open.) -->
+  <string id="330102">XBMC will minimise shortly</string>
+  <string id="330103">XBMC will close shortly</string>
+  <!-- Steam binary missing or not specified -->
+  <string id="33021">Cannot find Steam binary</string>
+  <string id="33022">The addon cannot locate the Steam binary at '%s'. Please check the location again.</string>
+  <string id="33023">You must enter the path to the Steam binary.</string>
+  <!-- Can't connect to SteamCommunity.com error (error string not translated) -->
+  <string id="33031">Cannot connect to SteamCommunity.com</string>
+  <string id="33032">Error reported: %s.</string>
+  <!-- Can't find profile error -->
+  <string id="33041">Cannot find your profile on SteamCommunity.com</string>
+  <string id="33042">Please check the Public URL in Steam is set correctly. Error reported: %s.</string>
+  <!-- Can't launch game error -->
+  <string id="33051">An error may have occurred while launching the game</string>
+  <string id="33052">Please try again. Check Steam has not crashed.</string>
+</strings>
