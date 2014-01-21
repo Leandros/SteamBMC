@@ -1,13 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.programs.steambmcdev"
-       name="SteamBMC"
-       version="0.1.0"
-       provider-name="Leandros">
+<addon id="plugin.programs.steambmcdev" name="SteamBMC" version="0.1.0" provider-name="Leandros">
     <requires>
-		<!-- You need superrepo.org -->
-    	<import addon="script.module.pil" version="1.1.7"/>
-      <import addon="script.module.requests2" version="2.2.0"/>
-      <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="script.module.pil" version="1.1.7"/>
+        <import addon="script.module.requests2" version="2.2.0"/>
+        <import addon="xbmc.python" version="2.1.0"/>
     </requires>
     <extension point="xbmc.python.pluginsource"
                library="default.py">
@@ -18,9 +13,12 @@
         <platform>all</platform>
         <summary>SteamBMC</summary>
         <description>Browse and launch all your Steam games from XBMC. Games are automatically added using your library contents. Fanart and images are added for games where available.</description>
-        <disclaimer>You will need Steam installed and an active web connection to launch games. Currently only supports Windows, however Linux and OS X support should be available soon.
+        <disclaimer>You need Steam installed and an active web connection to launch games. Currently only supports Windows!
 
 The "VALVe Logo", Valve and Steam are trademarks of Valve Corporation.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2</license>
+        <forum>http://forum.xbmc.org/showthread.php?tid=165131&page=11</forum>
+        <website>https://github.com/leandros/steambmc</website>
+        <source>https://github.com/leandros/steambmc</source>
     </extension>
 </addon>
