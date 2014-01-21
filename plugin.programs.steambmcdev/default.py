@@ -1,23 +1,3 @@
-"""
-SteamBMC: XBMC Addon to Browse and Launch Steam Games
-Copyright (C) 2013 T. Oldbury
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-02110-1301, USA.
-"""
-
 import os, re, sys, shutil, urlparse, time
 import xbmcplugin, xbmcgui, xbmcaddon, xbmc
 import steamapi
@@ -51,11 +31,11 @@ def waitFor(secs, call):
     return False
 
 """
-checkWindowsBits: Are we running 32-bit or 64-bit Windows? 
+checkWindowsArch: Are we running 32-bit or 64-bit Windows? 
 
 @return     32 for 32-bit OR non-Windows, 64 for 64-bit Windows
 """
-def checkWindowsBits():
+def checkWindowsArch():
     if 'PROGRAMFILES(X86)' in os.environ:
         return 64
     else:
@@ -74,7 +54,7 @@ verifySettings: Check that some of the settings that have been chosen are OK. If
                 show an error message.
 """
 def verifySettings():
-    # Check Steam bin exists
+    # Check if Steam bin exists
     steam_bin = addon.getSetting("steam_bin")
     if len(steam_bin.strip()) == 0:
         xbmcgui.Dialog().ok(lang(33021), lang(33023))
@@ -89,18 +69,20 @@ setupDefaultSettings: Fill out Steam binary and other settings, for first run.
 """
 def setupDefaultSettings():
     # Detect OS and fill out Steam binary
-    if sys.platform.startswith("win"): 
-        if checkWindowsBits() == 32:
+    if sys.platform.startswith("win"):
+        if checkWindowsArch() == 32:
             addon.setSetting("steam_bin", "C:\\Program Files\\Steam\\Steam.exe")
         else:
             addon.setSetting("steam_bin", "C:\\Program Files (x86)\\Steam\\Steam.exe")
-    elif sys.platform.startswith("linux"): 
-        addon.setSetting("steam_bin", "Linux Steam directory auto-fill TODO")
+    elif sys.platform.startswith("linux"):
+        addon.setSetting("steam_bin", "~/.local/share/Steam/steam")
+    elif sys.platform.startswith("darwin"):
+        addon.setSetting("steam_bin", "/Applications/Steam.app")
 
 # Main entry point
 if __name__ == "__main__":
     xbmc.log("SteamBMC (%s) Version %s" % (addon_name, addon_version))
-    ifc = steamapi.SteamCommunityIfc(addon.getSetting("steam_publicurl"))
+    steamuser = steamapi.SteamUser(addon.getSetting("steam_publicurl"))
     cmd = urlparse.parse_qs(sys.argv[2][1:])
     xbmc.log("Our CMD : %s" % cmd, xbmc.LOGDEBUG)
     xbmc.log("Our ARGV: %s" % sys.argv, xbmc.LOGDEBUG)
@@ -121,23 +103,20 @@ if __name__ == "__main__":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33011), lang(33015))
         progress.update(5, lang(330101))
-        steamapi.steamCheck()
-        # Add settings item
-        # listitem = xbmcgui.ListItem("Settings")
-        # xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=settings", listitem, isFolder=False)
-        if not ifc.checkSteamConnectivity():
-            xbmcgui.Dialog().ok(lang(33031), lang(33032) % ifc.http_code)
-        else:
-            try:
-                ifc.getOwnedGames(prog_callback=progress)
-            except RuntimeError:
-                xbmcgui.Dialog().ok(lang(33041), lang(33042) % ifc.http_code)
-            # Add games items
-            for game in ifc.owned_games:
-                listitem = xbmcgui.ListItem(game.game_name, iconImage=game.artwork_logo[0])
-                if addon.getSetting("artwork_usefanart") == "true":
-                    listitem.setProperty("Fanart_Image", game.artwork_promo[0])
-                xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
+        steamapi.startSteam()
+
+        try:
+            steamuser.getOwnedGames(prog_callback=progress)
+        except RuntimeError:
+            xbmcgui.Dialog().ok(lang(33041), lang(33042) % steamuser.exception)
+        # Add games items
+        for game in steamuser.owned_games:
+            # Exclude Artwork for now
+            #listitem = xbmcgui.ListItem(game.game_name, iconImage=game.artwork_logo[0])
+            listitem = xbmcgui.ListItem(game.game_name)
+            #if addon.getSetting("artwork_usefanart") == "true":
+            #    listitem.setProperty("Fanart_Image", game.artwork_promo[0])
+            xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
         progress.update(100, lang(33016))
         xbmcplugin.endOfDirectory(handle)
         xbmc.log("Done!")
@@ -148,10 +127,10 @@ if __name__ == "__main__":
         progress.create(lang(33018), lang(33012))
         progress.update(50)
         try:
-            ifc.getOwnedGames(get_art=False)
+            steamuser.getOwnedGames()
         except RuntimeError:
-            xbmcgui.Dialog().ok(lang(33041), lang(33042) % ifc.http_code)
-        for game in ifc.owned_games:
+            xbmcgui.Dialog().ok(lang(33041), lang(33042) % steamuser.exception)
+        for game in steamuser.owned_games:
             if game.game_id == int(cmd['game_id'][0]):
                 progress.update(100, lang(33019))
                 if not game.launchGame():
@@ -171,7 +150,7 @@ if __name__ == "__main__":
     elif cmd['do'][0] == "refresh_cache":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33017), lang(33012))
-        ifc.getOwnedGames(art_update=True, prog_callback=progress)
+        steamuser.getOwnedGames(prog_callback=progress)
         xbmc.executebuiltin(sys.argv[0])
     elif cmd['do'][0] == "settings":
         showSettingsDialog()

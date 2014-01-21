@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-
-<!-- Help! I can't write addon.xml's to save my life. Modified from 4oD plugin; things may be broken! -->
-
 <addon id="plugin.programs.steambmcdev"
        name="SteamBMC"
-       version="1.0.0"
-       provider-name="tom66">
+       version="0.1.0"
+       provider-name="Leandros">
     <requires>
 		<!-- You need superrepo.org -->
     	<import addon="script.module.pil" version="1.1.7"/>
-        <import addon="xbmc.python" version="2.1.0"/>
+      <import addon="script.module.requests2" version="2.2.0"/>
+      <import addon="xbmc.python" version="2.1.0"/>
     </requires>
     <extension point="xbmc.python.pluginsource"
                library="default.py">
@@ -24,8 +22,5 @@
 
 The "VALVe Logo", Valve and Steam are trademarks of Valve Corporation.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2</license>
-        <forum></forum>
-        <website></website>
-        <source></source>
     </extension>
 </addon>
