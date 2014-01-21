@@ -99,7 +99,24 @@ if __name__ == "__main__":
         fp.write("Delete this file to force first run actions to occur again.")
         fp.close()
     if 'do' not in cmd or len(cmd['do']) == 0:
-        xbmc.log("Generating owned games list", xbmc.LOGDEBUG)
+        xbmc.log("Generating start", xbmc.LOGDEBUG)
+        progress = xbmcgui.DialogProgress()
+        progress.create(lang(33011), lang(33015))
+        progress.update(5, lang(330101))
+        steamapi.startSteam()
+
+        # SetUp Folders
+        folder = xbmcgui.ListItem(lang(33061))
+        xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=installed", folder, isFolder=True)
+        folder = xbmcgui.ListItem(lang(33062))
+        xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=notinstalled", folder, isFolder=True)
+
+        progress.update(100, lang(33016))
+        xbmcplugin.endOfDirectory(handle)
+        xbmc.log("Done!")
+        progress.close()
+    elif cmd['do'][0] == "installed":
+        xbmc.log("Generating installed games", xbmc.LOGDEBUG)
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33011), lang(33015))
         progress.update(5, lang(330101))
@@ -109,14 +126,38 @@ if __name__ == "__main__":
             steamuser.getOwnedGames(prog_callback=progress)
         except RuntimeError:
             xbmcgui.Dialog().ok(lang(33041), lang(33042) % steamuser.exception)
-        # Add games items
+
         for game in steamuser.owned_games:
-            # Exclude Artwork for now
-            #listitem = xbmcgui.ListItem(game.game_name, iconImage=game.artwork_logo[0])
-            listitem = xbmcgui.ListItem(game.game_name)
-            #if addon.getSetting("artwork_usefanart") == "true":
-            #    listitem.setProperty("Fanart_Image", game.artwork_promo[0])
-            xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
+            installedgames = steamuser.getInstalledGames()
+            for installedgame in installedgames:
+                if str(game.game_id) == installedgame:
+                    listitem = xbmcgui.ListItem(game.game_name)
+                    xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
+
+        progress.update(100, lang(33016))
+        xbmcplugin.endOfDirectory(handle)
+        xbmc.log("Done!")
+        progress.close()
+    elif cmd['do'][0] == "notinstalled":
+        xbmc.log("Generating NOT installed games", xbmc.LOGDEBUG)
+        progress = xbmcgui.DialogProgress()
+        progress.create(lang(33011), lang(33015))
+        progress.update(5, lang(330101))
+        steamapi.startSteam()
+
+        try:
+            steamuser.getOwnedGames(prog_callback=progress)
+        except RuntimeError:
+            xbmcgui.Dialog().ok(lang(33041), lang(33042) % steamuser.exception)
+
+        for game in steamuser.owned_games:
+            installedgames = steamuser.getInstalledGames()
+            for installedgame in installedgames:
+                if str(game.game_id) != installedgame:
+                    listitem = xbmcgui.ListItem(game.game_name)
+                    xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
+                    break;
+
         progress.update(100, lang(33016))
         xbmcplugin.endOfDirectory(handle)
         xbmc.log("Done!")

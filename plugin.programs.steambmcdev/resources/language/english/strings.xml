@@ -44,4 +44,7 @@
   <!-- Can't launch game error -->
   <string id="33051">An error may have occurred while launching the game</string>
   <string id="33052">Please try again. Check Steam has not crashed.</string>
+  <!-- Start Screen -->
+  <string id="33061">Installed</string>
+  <string id="33062">Not Installed</string>
 </strings>

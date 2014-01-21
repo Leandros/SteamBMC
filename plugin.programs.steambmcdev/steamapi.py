@@ -158,3 +158,12 @@ class SteamUser(object):
             num += 1
         
         return self.owned_games
+
+    def getInstalledGames(self):
+        steamapps = STEAM_BIN[:-10]
+        dir = os.listdir(steamapps + "\SteamApps")
+        games = []
+        for file in dir:
+            if file.startswith("appmanifest_"):
+                games.append(file[12:-4])
+        return games
