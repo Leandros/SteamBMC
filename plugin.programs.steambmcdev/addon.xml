@@ -17,8 +17,5 @@
 
 The "VALVe Logo", Valve and Steam are trademarks of Valve Corporation.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2</license>
-        <forum>http://forum.xbmc.org/showthread.php?tid=165131&page=11</forum>
-        <website>https://github.com/leandros/steambmc</website>
-        <source>https://github.com/leandros/steambmc</source>
     </extension>
 </addon>
