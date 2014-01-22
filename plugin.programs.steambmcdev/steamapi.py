@@ -84,6 +84,7 @@ class SteamGame(object):
         # Artwork
         self.artwork_promo = []
         self.artwork_logo = []
+        self.artwork_logo_url = ""
 
     """
     setPlayTime: Set the playtime stats.
@@ -114,14 +115,17 @@ class SteamGame(object):
             self.artwork_logo = [file_path_png]
             return
         if artupdate:
-            os.remove(file_path_png)
+            try:
+                os.remove(file_path_png)
+            except IOError:
+                # Ignore.
 
-        url = 'http://cdn' + getValveCdn() + '.steampowered.com/v/gfx/apps/' + str(self.game_id) + '/header.jpg'
+        #url = 'http://cdn' + getValveCdn() + '.steampowered.com/v/gfx/apps/' + str(self.game_id) + '/header.jpg'
         try:
             if session != None:
-                r = session.get(url, stream=True)
+                r = session.get(game.artwork_logo_url, stream=True)
             else:
-                r = requests.get(url, stream=True)
+                r = requests.get(game.artwork_logo_url, stream=True)
         except requests.exceptions.ConnectionError as e:
             # Use Default Thumbnail.
             xbmc.log("Artwork Scraping Error: " + e, xbmc.LOGDEBUG)
@@ -209,6 +213,7 @@ class SteamUser(object):
                     break
 
             game = SteamGame(int(game_info['appID']), game_info['name'].strip().encode('UTF-8'))
+            game.artwork_logo_url = game_info['logo'].strip().encode('UTF-8')
             if getart:
                 game.scrapeLogos(s, artupdate)
             if 'hoursLast2Weeks' in game_info and 'hoursOnRecord' in game_info:
