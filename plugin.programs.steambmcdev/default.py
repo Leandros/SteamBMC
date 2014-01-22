@@ -79,6 +79,20 @@ def setupDefaultSettings():
     elif sys.platform.startswith("darwin"):
         addon.setSetting("steam_bin", "/Applications/Steam.app")
 
+"""
+forgeListItem: Magically forge the ListItem for the games.
+"""
+def forgeListItem(game):
+    listitem = xbmcgui.ListItem(game.game_name)
+    if game.hours_played > 0:
+        listitem.setLabel2("Hours played: %d" % game.hours_played)
+    file_path_png = game.artwork_logo[0]
+    listitem.setIconImage(file_path_png)
+    listitem.setThumbnailImage(file_path_png)
+    #listitem.setInfo("video", {"title": game.game_name, "year": 2009})
+    #listitem.addContextMenuItems([('Game Information', sys.argv[0] + '?do=gameinfo'),], False)
+    return listitem
+
 # Main entry point
 if __name__ == "__main__":
     xbmc.log("SteamBMC (%s) Version %s" % (addon_name, addon_version))
@@ -131,10 +145,7 @@ if __name__ == "__main__":
             installedgames = steamuser.getInstalledGames()
             for installedgame in installedgames:
                 if str(game.game_id) == installedgame:
-                    listitem = xbmcgui.ListItem(game.game_name)
-                    file_path_png = game.artwork_logo[0]
-                    listitem.setIconImage(file_path_png)
-                    listitem.setThumbnailImage(file_path_png)
+                    listitem = forgeListItem(game)
                     xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
 
         progress.update(100, lang(33016))
@@ -157,10 +168,7 @@ if __name__ == "__main__":
             installedgames = steamuser.getInstalledGames()
             for installedgame in installedgames:
                 if str(game.game_id) != installedgame:
-                    listitem = xbmcgui.ListItem(game.game_name)
-                    file_path_png = game.artwork_logo[0]
-                    listitem.setIconImage(file_path_png)
-                    listitem.setThumbnailImage(file_path_png)
+                    listitem = forgeListItem(game)
                     xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
                     break;
 
