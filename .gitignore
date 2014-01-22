@@ -1,0 +1,6 @@
+# Mac OS X Specific Files.
+.DS_STORE
+
+# Python crap, just in case.
+*.pyc
+*.pyo
