@@ -25,10 +25,7 @@ Essentially this lets you play and launch any installed Steam game on your syste
 - Group games into categories e.g. Kid Friendly. (Maybe...)
 - Add your own fanart.
 - Select higher resolution fanart if available. (Currently, the code only finds the first fanart available, which may be crusty and low resolution. Try and find a 720p/1080p background, if available.)
-- Perhaps move from os.system to subprocess, if it works better on some platforms.
-- You can try and launch Steam games you haven't yet downloaded, and Steam will try to download them. Is this a desired feature? Seems it would be better to abort with an error - need to see if there's a way to detect if a game is actually installed.
 - Changing the public URL doesn't get reflected after you leave the settings dialog. You need to leave the addon then enter it again to refresh that.
-- Blank icon necessary if no art available.
 
 ### Compatability
 Currently **Windows only.** However, Linux and Mac OS X support will be added soon.
