@@ -132,6 +132,9 @@ if __name__ == "__main__":
             for installedgame in installedgames:
                 if str(game.game_id) == installedgame:
                     listitem = xbmcgui.ListItem(game.game_name)
+                    file_path_png = game.artwork_logo[0]
+                    listitem.setIconImage(file_path_png)
+                    listitem.setThumbnailImage(file_path_png)
                     xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
 
         progress.update(100, lang(33016))
@@ -155,6 +158,9 @@ if __name__ == "__main__":
             for installedgame in installedgames:
                 if str(game.game_id) != installedgame:
                     listitem = xbmcgui.ListItem(game.game_name)
+                    file_path_png = game.artwork_logo[0]
+                    listitem.setIconImage(file_path_png)
+                    listitem.setThumbnailImage(file_path_png)
                     xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
                     break;
 
@@ -168,7 +174,7 @@ if __name__ == "__main__":
         progress.create(lang(33018), lang(33012))
         progress.update(50)
         try:
-            steamuser.getOwnedGames()
+            steamuser.getOwnedGames(getart=False)
         except RuntimeError:
             xbmcgui.Dialog().ok(lang(33041), lang(33042) % steamuser.exception)
         for game in steamuser.owned_games:
@@ -191,7 +197,7 @@ if __name__ == "__main__":
     elif cmd['do'][0] == "refresh_cache":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33017), lang(33012))
-        steamuser.getOwnedGames(prog_callback=progress)
+        steamuser.getOwnedGames(prog_callback=progress, artupdate=True)
         xbmc.executebuiltin(sys.argv[0])
     elif cmd['do'][0] == "settings":
         showSettingsDialog()
