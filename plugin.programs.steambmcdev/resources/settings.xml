@@ -10,8 +10,6 @@
     </category>
     <category label="32003">
         <setting label="32211" type="bool" id="artwork_usefanart" default="true" />
-        <setting label="32212" type="enum" id="artwork_logosize" default="0" lvalues="32113|32114" />
-        <setting label="32216" type="bool" id="artwork_addborder" default="true" />
         <setting label="32215" type="action" id="artwork_refreshcache" default="" action="XBMC.RunPlugin(plugin://plugin.programs.steambmcdev/?do=refresh_cache)" />
     </category>
 </settings>
