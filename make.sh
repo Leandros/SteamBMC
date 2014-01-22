@@ -2,7 +2,7 @@
 # Creates a Zip file for the addon, with correct naming and versioning.
 
 DEBUG=0
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=${PWD##*/}
 
 read_dom () {
     local IFS=\>
