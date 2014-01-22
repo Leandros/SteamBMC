@@ -37,7 +37,8 @@ if [[ $DEBUG == 1 ]]; then
         NUM=`echo "$FILE" | grep -o "-" | wc -l`
         if [[ $NUM -gt 1 ]]; then
             RNUM=`echo $FILE | cut -d'-' -f 3 | rev | cut -c5- | rev`
-            rm $ID-$VERSION-$RNUM.zip
+            rm $ID-$VERSION-$RNUM.zip >/dev/null 2>&1
+            rm ~/___xbmc/$ID-$VERSION-$RNUM.zip >/dev/null 2>&1
             RNUM=`expr $RNUM + 1`
         else
             rm $ID-$VERSION.zip >/dev/null 2>&1
@@ -52,6 +53,7 @@ fi
 cd ..
 if [[ $DEBUG == 1 ]]; then
     zip -r -q $ID-$VERSION-$RNUM.zip $DIR
+    cp $ID-$VERSION-$RNUM.zip ~/___xbmc/$ID-$VERSION-$RNUM.zip
     mv $ID-$VERSION-$RNUM.zip $DIR/$ID-$VERSION-$RNUM.zip
     echo "Zip file created, it's called '$ID-$VERSION-$RNUM.zip'"
 else

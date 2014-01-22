@@ -4,3 +4,6 @@
 # Python crap, just in case.
 *.pyc
 *.pyo
+
+# Ignore "compiled" files
+*.zip
