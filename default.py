@@ -86,9 +86,13 @@ def forgeListItem(game):
     listitem = xbmcgui.ListItem(game.game_name)
     if game.hours_played > 0:
         listitem.setLabel2("Hours played: %d" % game.hours_played)
-    file_path_png = game.artwork_logo[0]
-    listitem.setIconImage(file_path_png)
-    listitem.setThumbnailImage(file_path_png)
+    if game.artwork_logo[0]:
+        file_path_png = game.artwork_logo[0]
+        listitem.setIconImage(file_path_png)
+        listitem.setThumbnailImage(file_path_png)
+    if addon.getSetting("artwork_usefanart") == "true":
+        if game.artwork_promo[0]:
+            listitem.setProperty("Fanart_Image", game.artwork_promo[0])
     #listitem.setInfo("video", {"title": game.game_name, "year": 2009})
     #listitem.addContextMenuItems([('Game Information', sys.argv[0] + '?do=gameinfo'),], False)
     return listitem

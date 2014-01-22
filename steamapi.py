@@ -106,46 +106,65 @@ class SteamGame(object):
 
     @return         The file path to the logo in png format.
     """
-    def scrapeLogos(self, session=None, artupdate=False):
+    def scrapeLogo(self, session=None, artupdate=False):
         xbmc.log("Checking artwork for #%d" % self.game_id, xbmc.LOGDEBUG)
-        file_path = os.path.join(ARTWORK_CACHE_FOLDER, "game_%d_logo_1.jpg" % (self.game_id))
         file_path_png = os.path.join(ARTWORK_CACHE_FOLDER, "game_%d_logo_1.png" % (self.game_id))
-
+        
         if os.path.isfile(file_path_png) or not artupdate:
             self.artwork_logo = [file_path_png]
             return
         if artupdate:
             try:
                 os.remove(file_path_png)
-            except IOError:
+            except OSError:
                 # Ignore.
+                pass
 
         #url = 'http://cdn' + getValveCdn() + '.steampowered.com/v/gfx/apps/' + str(self.game_id) + '/header.jpg'
-        try:
-            if session != None:
-                r = session.get(game.artwork_logo_url, stream=True)
-            else:
-                r = requests.get(game.artwork_logo_url, stream=True)
-        except requests.exceptions.ConnectionError as e:
-            # Use Default Thumbnail.
-            xbmc.log("Artwork Scraping Error: " + e, xbmc.LOGDEBUG)
+        file_path = self.__downloadFile(self.artwork_logo_url, session, "logo")
+        self.artwork_logo = [file_path]
+        return file_path
+
+    """
+    scrapePromo: Scrapes the game promos, which are used as fanart for the ListItems.
+
+    @param          session: The requests.Session() in which the get requests are executed.
+
+    @param          artupdate: Whether the art (logos and fanart) should be updated or not.
+
+    @return         The file path to the promo in png format.
+    """
+    def scrapePromo(self, session=None, artupdate=False):
+        file_path_png = os.path.join(ARTWORK_CACHE_FOLDER, "game_%d_promo_1.png" % (self.game_id))
+        
+        if os.path.isfile(file_path_png) or not artupdate:
+            self.artwork_promo = [file_path_png]
             return
-        with open(file_path, "wb") as file:
-            for chunk in r.iter_content():
-                file.write(chunk)
+        if artupdate:
+            try:
+                os.remove(file_path_png)
+            except OSError:
+                # Ignore.
+                pass
 
-        # Save as .png
-        try:
-            Image.open(file_path).save(file_path_png)
-        except IOError:
-            img = Image.new("RGB", (460, 215), "black")
-            img.save(file_path_png)
-            self.artwork_logo = [file_path_png]
-            return file_path_png
+        if session:
+            r = session.get('http://store.steampowered.com/app/' + str(self.game_id) + '/')
+        else:
+            r = requests.get('http://store.steampowered.com/app/' + str(self.game_id) + '/')
 
-        os.remove(file_path)
-        self.artwork_logo = [file_path_png]
-        return file_path_png
+        pos_div = r.content.find('<div class="screenshot_holder">')
+        if pos_div != -1:
+            pos_url = r.content[pos_div:].find('<a href="')
+            # 9: the length of the tag string
+            pos_end = r.content[pos_url + pos_div + 9:].find('"')
+            url = r.content[pos_div + pos_url + 9:pos_div + pos_url + pos_end]
+        else:
+            self.artwork_promo = [None]
+            return False
+
+        file_path = self.__downloadFile(url, session, "promo")
+        self.artwork_promo = [file_path]
+        return file_path
 
     """
     launchGame: Launch this game using Steam. Takes account of platform.
@@ -158,6 +177,59 @@ class SteamGame(object):
         if os.path.basename(STEAM_BIN) not in _coreapputils.getProcessesList():
             return False
         return True
+
+    """
+    __downloadFile: Helper to download the file located at url to the artwork cache.
+    """
+    def __downloadFile(self, url, session, artwork_type, attempt=1):
+        file_path = os.path.join(ARTWORK_CACHE_FOLDER, "game_%d_%s_1.jpg" % (self.game_id, artwork_type))
+        file_path_png = os.path.join(ARTWORK_CACHE_FOLDER, "game_%d_%s_1.png" % (self.game_id, artwork_type))
+
+        try:
+            if session:
+                r = session.get(url, stream=True, timeout=60)
+            else:
+                r = requests.get(url, stream=True, timeout=60)
+        except requests.exceptions.ConnectionError as e:
+            # Use Default Thumbnail.
+            if artwork_type == "logo":
+                return self.__createDefaultLogo(file_path_png)
+            else:
+                return None
+        with open(file_path, "wb") as file:
+            try:
+                for chunk in r.iter_content(2048):
+                    if not chunk:
+                        break
+                    file.write(chunk)
+            except socket.timeout:
+                if attempt > 5:
+                    if artwork_type == "logo":
+                        return self.__createDefaultLogo(file_path_png)
+                    else:
+                        return None
+                return self.__downloadFile(url, session, artwork_type, attempt + 1)
+
+        # Save as .png
+        try:
+            Image.open(file_path).save(file_path_png)
+        except IOError:
+            if artwork_type == "logo":
+                return self.__createDefaultLogo(file_path_png)
+            else:
+                return None
+
+        os.remove(file_path)
+        return file_path_png
+
+    """
+    __createDefaultLogo: Creates the default, black logo
+    """
+    def __createDefaultLogo(self, file_path):
+        img = Image.new("RGB", (460, 215), "black")
+        img.save(file_path)
+        self.artwork_logo = [file_path]
+        return file_path
 
 
 class SteamUser(object):
@@ -215,7 +287,8 @@ class SteamUser(object):
             game = SteamGame(int(game_info['appID']), game_info['name'].strip().encode('UTF-8'))
             game.artwork_logo_url = game_info['logo'].strip().encode('UTF-8')
             if getart:
-                game.scrapeLogos(s, artupdate)
+                game.scrapeLogo(s, artupdate)
+                game.scrapePromo(s, artupdate)
             if 'hoursLast2Weeks' in game_info and 'hoursOnRecord' in game_info:
                 game.setPlayTime(float(game_info['hoursLast2Weeks']), float(game_info['hoursOnRecord']))
             self.owned_games.append(game)
