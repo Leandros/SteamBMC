@@ -41,25 +41,23 @@ if [[ $DEBUG == 1 ]]; then
             rm ~/___xbmc/$ID-$VERSION-$RNUM.zip >/dev/null 2>&1
             RNUM=`expr $RNUM + 1`
         else
-            rm $ID-$VERSION.zip >/dev/null 2>&1
             RNUM=1
         fi
     else
-        rm $ID-$VERSION.zip >/dev/null 2>&1
         RNUM=1
     fi
 fi
 
-cd ..
+rm $ID-$VESION.zip >/dev/null 2>&1
+
+mkdir $ID
+rsync -ra --exclude=$ID --exclude='.DS_STORE' --exclude='.*' --exclude='make.sh' --exclude='*.zip' . $ID
 if [[ $DEBUG == 1 ]]; then
-    zip -r -q $ID-$VERSION-$RNUM.zip $DIR
+    zip -r -q $ID-$VERSION-$RNUM.zip $ID
     cp $ID-$VERSION-$RNUM.zip ~/___xbmc/$ID-$VERSION-$RNUM.zip
-    mv $ID-$VERSION-$RNUM.zip $DIR/$ID-$VERSION-$RNUM.zip
     echo "Zip file created, it's called '$ID-$VERSION-$RNUM.zip'"
 else
-    zip -r -q $ID-$VERSION.zip $DIR
-    mv $ID-$VERSION.zip $DIR/$ID-$VERSION.zip
+    zip -r -q $ID-$VERSION.zip $ID
     echo "Zip file created, it's called '$ID-$VERSION.zip'"
 fi
-cd $DIR
-
+rm -rf $ID
