@@ -1,4 +1,4 @@
-<addon id="plugin.programs.steambmcdev" name="SteamBMC" version="0.1.0" provider-name="Leandros">
+<addon id="plugin.programs.steambmcdev" name="SteamBMC" version="0.2.0" provider-name="Leandros">
     <requires>
         <import addon="script.module.pil" version="1.1.7"/>
         <import addon="script.module.requests2" version="2.2.0"/>

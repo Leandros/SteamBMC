@@ -1,2 +1,7 @@
+0.2.0:
+- Add folders for installed and uninstalled games
+- Add icons for games
+- Add fanart for games
+
 0.1.0:
 - Initial Release
