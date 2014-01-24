@@ -32,6 +32,12 @@ def startSteam():
     _coreapputils.launchFork("\"%s\" -silent" % STEAM_BIN.replace('"', '\"'))
 
 """
+startBigPicture: Starts steams big picture mode.
+"""
+def startBigPicture():
+    _coreapputils.launchFork("\"%s\" -start %s" % (STEAM_BIN.replace('"', '\"'), "steam://open/bigpicture"))
+
+"""
 getValveCdn:    Return a random cdn number for steampowered.com
 
 @return         (string) Single character, currently between 2 and 3, unless Valve adds

@@ -124,9 +124,11 @@ if __name__ == "__main__":
         steamapi.startSteam()
 
         # SetUp Folders
-        folder = xbmcgui.ListItem(lang(33061))
-        xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=installed", folder, isFolder=True)
+        steam = xbmcgui.ListItem(lang(33061))
+        xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=bigpicture", steam, isFolder=False)
         folder = xbmcgui.ListItem(lang(33062))
+        xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=installed", folder, isFolder=True)
+        folder = xbmcgui.ListItem(lang(33063))
         xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=notinstalled", folder, isFolder=True)
 
         progress.update(100, lang(33016))
@@ -206,6 +208,12 @@ if __name__ == "__main__":
                         if not waitFor(5, progress.iscanceled):
                             xbmc.executebuiltin("Quit()")
                 break
+    elif cmd['do'][0] == "bigpicture":
+        progress = xbmcgui.DialogProgress()
+        progress.create(lang(33018), lang(33012))
+        progress.update(50)
+        steamapi.startBigPicture()
+        progress.update(100)
     elif cmd['do'][0] == "refresh_cache":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33017), lang(33012))
