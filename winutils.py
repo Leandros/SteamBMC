@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 """
 shellOutput: Execute a shell command, return the output.
@@ -40,5 +41,16 @@ launchFork: Launch an application (forked execution.) Return immediately.
             Simply a subprocess wrapper. (For now...)
 """
 def launchFork(cmd):
-    subprocess.Popen(cmd, shell=True)
+    # Subprocess doesn't work as expected. It creates a new child process. Which it shouldn't.
+    # os.system fits our needs perfectly here, because it essentially just pipes the command to the cmd.
+    #
+    # We also could spawn a process:
+    # os.spawnl(os.P_NOWAIT, cmd)
+    #
+    # Windows specific alternative and usage of subprocess:
+    # subprocess.Popen(cmd, close_fds=True)
+    #
+    # Original way:
+    # subprocess.Popen(cmd, shell=True)
+    os.system(cmd)
 

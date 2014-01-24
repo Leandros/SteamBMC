@@ -121,7 +121,6 @@ if __name__ == "__main__":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33011), lang(33015))
         progress.update(5, lang(330101))
-        steamapi.startSteam()
 
         # SetUp Folders
         steam = xbmcgui.ListItem(lang(33061))
@@ -140,7 +139,6 @@ if __name__ == "__main__":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33011), lang(33015))
         progress.update(5, lang(330101))
-        steamapi.startSteam()
 
         try:
             steamuser.getOwnedGames(prog_callback=progress)
@@ -163,7 +161,6 @@ if __name__ == "__main__":
         progress = xbmcgui.DialogProgress()
         progress.create(lang(33011), lang(33015))
         progress.update(5, lang(330101))
-        steamapi.startSteam()
 
         try:
             steamuser.getOwnedGames(prog_callback=progress)
@@ -185,7 +182,8 @@ if __name__ == "__main__":
     elif cmd['do'][0] == "game":
         xbmc.log("Generating owned games list", xbmc.LOGDEBUG)
         progress = xbmcgui.DialogProgress()
-        progress.create(lang(33018), lang(33012))
+        progress.create(lang(33018), lang(330101))
+        steamapi.startSteam()
         progress.update(50)
         try:
             steamuser.getOwnedGames(getart=False)
