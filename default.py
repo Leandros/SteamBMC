@@ -145,7 +145,7 @@ if __name__ == "__main__":
             for installedgame in installedgames:
                 if str(game.game_id) == installedgame:
                     listitem = forgeListItem(game)
-                    xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
+                    xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&installed=1&game_id=" + str(game.game_id), listitem, isFolder=False)
 
         progress.update(100, lang(33016))
         xbmcplugin.endOfDirectory(handle)
@@ -167,7 +167,7 @@ if __name__ == "__main__":
             for installedgame in installedgames:
                 if str(game.game_id) != installedgame:
                     listitem = forgeListItem(game)
-                    xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&game_id=" + str(game.game_id), listitem, isFolder=False)
+                    xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=game&installed=0&game_id=" + str(game.game_id), listitem, isFolder=False)
                     break;
 
         progress.update(100, lang(33016))
@@ -192,7 +192,7 @@ if __name__ == "__main__":
                     if addon.getSetting("game_notify"):
                         xbmcgui.Dialog().ok(lang(33051), lang(33052))
                 else:
-                    if int(addon.getSetting("game_onlaunch")) == 1:
+                    if int(addon.getSetting("game_onlaunch")) == 1 or int(cmd['installed'][0]) == 0:
                         progress.update(100, lang(330102))
                         if not waitFor(5, progress.iscanceled):
                             xbmc.executebuiltin("Minimize()")
