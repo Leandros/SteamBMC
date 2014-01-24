@@ -118,9 +118,6 @@ if __name__ == "__main__":
         fp.close()
     if 'do' not in cmd or len(cmd['do']) == 0:
         xbmc.log("Generating start", xbmc.LOGDEBUG)
-        progress = xbmcgui.DialogProgress()
-        progress.create(lang(33011), lang(33015))
-        progress.update(5, lang(330101))
 
         # SetUp Folders
         steam = xbmcgui.ListItem(lang(33061))
@@ -130,15 +127,13 @@ if __name__ == "__main__":
         folder = xbmcgui.ListItem(lang(33063))
         xbmcplugin.addDirectoryItem(handle, sys.argv[0] + "?do=notinstalled", folder, isFolder=True)
 
-        progress.update(100, lang(33016))
         xbmcplugin.endOfDirectory(handle)
         xbmc.log("Done!")
-        progress.close()
     elif cmd['do'][0] == "installed":
         xbmc.log("Generating installed games", xbmc.LOGDEBUG)
         progress = xbmcgui.DialogProgress()
-        progress.create(lang(33011), lang(33015))
-        progress.update(5, lang(330101))
+        progress.create(lang(33011), lang(33012))
+        progress.update(5)
 
         try:
             steamuser.getOwnedGames(prog_callback=progress)
@@ -159,8 +154,8 @@ if __name__ == "__main__":
     elif cmd['do'][0] == "notinstalled":
         xbmc.log("Generating NOT installed games", xbmc.LOGDEBUG)
         progress = xbmcgui.DialogProgress()
-        progress.create(lang(33011), lang(33015))
-        progress.update(5, lang(330101))
+        progress.create(lang(33011), lang(33012))
+        progress.update(5)
 
         try:
             steamuser.getOwnedGames(prog_callback=progress)
@@ -208,7 +203,7 @@ if __name__ == "__main__":
                 break
     elif cmd['do'][0] == "bigpicture":
         progress = xbmcgui.DialogProgress()
-        progress.create(lang(33018), lang(33012))
+        progress.create(lang(33018), lang(33019))
         progress.update(50)
         steamapi.startBigPicture()
         progress.update(100)
